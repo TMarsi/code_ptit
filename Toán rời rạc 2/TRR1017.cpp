@@ -1,41 +1,50 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
-    freopen("DT.INP", "r", stdin);
-    freopen("DT.OUT", "w", stdout);
+int n,m,a[101][101],degIn[101],degOut[101],b[101][101];
+pair<int,int> edges[101];
+int main(){
+	freopen("DT.INP","r",stdin);
+	freopen("DT.OUT","w",stdout);
 
-    int t, n, m;
-    cin >> t >> n >> m;
+	int t;cin >> t;
+	cin >> n >> m;
+	for(int i = 1;i <= m;i++){
+		int u,v;cin >> u >> v;
+		degOut[u]++;
+		degIn[v]++;
+		a[u][v] = 1;
+	}
+	if(t == 1){
+		for(int i = 1;i <= n;i++){
+			cout << degIn[i] << " " << degOut[i] << "\n";
+		}
+	} else {
+		m = 0;
+		for(int i = 1;i <= n;i++){
+			for(int j = 1;j <= n;j++){
+				if(a[i][j]) {
+					m++;
+					edges[m] = {i,j};
+				}
+			}
+		}
+		cout << n << " " << m << "\n";
+		for(int e = 1;e <= m;e++){
+			int u = edges[e].first;
+			int v = edges[e].second;
+			b[v][e] = -1;
+			b[u][e] = 1;
+		}
 
-    vector<pair<int,int>> edges_list;
-    vector<int> indeg(n+1, 0), outdeg(n+1, 0);
+		for(int i = 1;i <= n;i++){
+			for(int j = 1;j <= m;j++){
+				cout << b[i][j] << " ";
+			}
+			cout << "\n";
+		}
+	}
 
-    for (int i = 0; i < m; i++) {
-        int u, v;
-        cin >> u >> v;
-        edges_list.push_back({u, v});
-        outdeg[u]++;
-        indeg[v]++;
-    }
-    sort(edges_list.begin(), edges_list.end());
 
-    if (t == 1) {
-        for (int i = 1; i <= n; i++)
-            cout << indeg[i] << " " << outdeg[i] << "\n";
-    } else {
-        
-        cout << n << " " << m << "\n";
-        for (int i = 1; i <= n; i++) {
-            for (int e = 0; e < m; e++) {
-                int val = 0;
-                if (edges_list[e].first == i) val = 1;
-                else if (edges_list[e].second == i) val = -1;
-                if (e > 0) cout << " ";
-                cout << val;
-            }
-            cout << "\n";
-        }
-    }
-    return 0;
+	return 0;
 }
