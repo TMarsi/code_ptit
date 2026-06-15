@@ -1,39 +1,41 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
-    freopen("DT.INP", "r", stdin);
-    freopen("DT.OUT", "w", stdout);
+int n,m,t,degIn[101],degOut[101],a[101][101],b[101][1001];
 
-    int t, n, m;
-    cin >> t >> n >> m;
 
-    vector<vector<int>> a(n+1, vector<int>(n+1, 0));
-    vector<int> indeg(n+1, 0), outdeg(n+1, 0);
+int main(){
+	freopen("DT.INP","r",stdin);
+	freopen("DT.OUT","w",stdout);
 
-    for (int i = 0; i < m; i++) {
-        int u, v;
-        cin >> u >> v;
-        a[u][v] = 1;
-        outdeg[u]++;
-        indeg[v]++;
-    }
+	cin >> t >> n >> m;
 
-    if (t == 1) {
-        for (int i = 1; i <= n; i++)
-            cout << indeg[i] << " " << outdeg[i] << "\n";
-    } else {
-        
-        cout << n << "\n";
-        for (int i = 1; i <= n; i++) {
-            vector<int> neighbors;
-            for (int j = 1; j <= n; j++)
-                if (a[i][j]) neighbors.push_back(j);
-            sort(neighbors.begin(), neighbors.end());
-            cout << neighbors.size();
-            for (int v : neighbors) cout << " " << v;
-            cout << "\n";
-        }
-    }
-    return 0;
+	if(t == 1){
+		for(int i = 1;i <= m;i++){
+			int u,v;cin >> u >> v;
+			degOut[u]++;
+			degIn[v]++;
+		}
+		for(int i = 1 ;i<= n;i++){
+			cout << degIn[i] << " " << degOut[i] << '\n'; 
+		}
+	} else {
+		for(int i = 1;i <= m;i++){
+			int u,v;cin >> u >> v;
+			a[u][v] = 1;
+		}
+		cout << n << "\n";
+		for(int i = 1;i <= n;i++){
+			int k = 0;
+			for(int j = 1;j <= n;j++){
+				if(a[i][j]) k++;
+			}
+			cout << k;
+			for(int j = 1;j <= n;j++){
+				if(a[i][j]) cout << " " << j;
+			}
+			cout << "\n";
+		}
+	}
+	return 0;
 }
