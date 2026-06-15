@@ -1,50 +1,48 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int n;
-vector<vector<int>> a;
-vector<bool> visited;
-vector<int> comp;
+int n,a[101][101];
+bool vs[101];
+vector<int> edges;
 
-void dfs(int u) {
-    visited[u] = true;
-    comp.push_back(u);
-    for (int v = 1; v <= n; v++) {
-        if (a[u][v] && !visited[v])
-            dfs(v);
-    }
+void DFS(int x){
+	vs[x] = true;
+	edges.push_back(x);
+	for(int i = 1;i <= n;i++){
+		if(a[x][i] == 1 && !vs[i]){
+			DFS(i);
+		}
+	}
 }
 
-int main() {
-    freopen("TK.INP", "r", stdin);
-    freopen("TK.OUT", "w", stdout);
 
-    cin >> n;
-    a.assign(n+1, vector<int>(n+1, 0));
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            cin >> a[i][j];
+int main(){
+	freopen("TK.INP","r",stdin);
+	freopen("TK.OUT","w",stdout);
 
-    visited.assign(n+1, false);
-    vector<vector<int>> components;
+	cin >> n;
+	for(int i = 1;i <= n;i++){
+		for(int j = 1;j <= n;j++) cin >> a[i][j];
+	}
+	vector<vector<int>> luu;
 
-    for (int i = 1; i <= n; i++) {
-        if (!visited[i]) {
-            comp.clear();
-            dfs(i);
-            sort(comp.begin(), comp.end());
-            components.push_back(comp);
-        }
-    }
+	for(int i = 1;i <= n;i++){
+		if(!vs[i]){
+			edges.clear();
+			DFS(i);
+			sort(edges.begin(),edges.end());
+			luu.push_back(edges);
+			}
+	}
+	
+	cout << luu.size() << "\n";
 
-    
-    cout << components.size() << "\n";
-    for (auto& c : components) {
-        for (int i = 0; i < (int)c.size(); i++) {
-            if (i > 0) cout << " ";
-            cout << c[i];
-        }
-        cout << "\n";
-    }
-    return 0;
+	for(int c = 0;c < (int)luu.size();c++){
+		for(int i = 0;i < (int)luu[c].size();i++){
+			cout << luu[c][i];
+			if(i < (int)luu[c].size() - 1) cout << " ";
+		}
+		cout << "\n";
+	}
+
 }
