@@ -1,42 +1,43 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-const int INF = 10000;
+int n,a[101][101],deg[101];
 
-int main() {
-    freopen("DT.INP", "r", stdin);
-    freopen("DT.OUT", "w", stdout);
+int main(){
+	freopen("DT.INP","r",stdin);
+	freopen("DT.OUT","w",stdout);
 
-    int t, n;
-    cin >> t >> n;
+	int t;cin >> t;
+	cin >> n;
+	for(int i = 1;i <= n;i++){
+		for(int j = 1;j <= n;j++) {
+			cin >> a[i][j];
+			if(i != j &&a[i][j] != 0 && a[i][j] != 10000) deg[i]++;
+		}
+	}
+	
+	if(t == 1){
+		for(int i = 1;i <= n;i++){
+			cout << deg[i] << " ";
+		}
+	} else {
+		int m = 0;
+		for(int i = 1;i <= n;i++){
+			for(int j = i + 1;j <= n;j++){
+				if(i != j &&a[i][j] != 0 && a[i][j] != 10000) {
+					m++;
 
-    vector<vector<int>> c(n+1, vector<int>(n+1, INF));
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            cin >> c[i][j];
-
-    
-    vector<int> deg(n+1, 0);
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            if (i != j && c[i][j] < INF) deg[i]++;
-
-    if (t == 1) {
-        for (int i = 1; i <= n; i++) {
-            if (i > 1) cout << " ";
-            cout << deg[i];
-        }
-        cout << "\n";
-    } else {
-        
-        vector<tuple<int,int,int>> edges;
-        for (int u = 1; u <= n; u++)
-            for (int v = u+1; v <= n; v++)
-                if (c[u][v] < INF)
-                    edges.push_back({u, v, c[u][v]});
-        cout << n << " " << edges.size() << "\n";
-        for (auto& [u, v, w] : edges)
-            cout << u << " " << v << " " << w << "\n";
-    }
-    return 0;
+				}
+			}
+		}
+		cout << n << " " << m <<"\n";
+		for(int i = 1;i <= n;i++){
+			for(int j = i + 1;j <= n;j++){
+				if(i != j &&a[i][j] != 0 && a[i][j] != 10000){
+					cout << i << " " << j << " " << a[i][j] << "\n"; 
+				}
+			}
+		}
+	}
+	return 0;
 }
