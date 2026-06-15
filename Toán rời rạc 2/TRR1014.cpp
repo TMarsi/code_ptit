@@ -1,50 +1,55 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
-    freopen("DT.INP", "r", stdin);
-    freopen("DT.OUT", "w", stdout);
+int n,m,a[101][101],degIn[101],degOut[101];
+int b[101][101];
+pair<int,int> edges[1001];
+int main(){
+	freopen("DT.INP","r",stdin);
+	freopen("DT.OUT","w",stdout);
 
-    int t, n;
-    cin >> t >> n;
+	int t;cin >> t;
+	cin >> n;
+	for(int i = 1;i <= n;i++){
+		for(int j = 1;j <= n;j++){
+			cin >> a[i][j];
+			if(a[i][j]){
+				degOut[i]++;
+				degIn[j]++;
+			}
+		}
+	}
 
-    vector<vector<int>> a(n+1, vector<int>(n+1, 0));
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            cin >> a[i][j];
+	if(t == 1){
+		for(int i = 1;i <= n;i++){
+			cout << degIn[i] << " " << degOut[i] << "\n";
+		}
+	} else {
+		m = 0;
+		for(int i = 1;i <= n;i++){
+			for(int j = 1;j <= n;j++){
+				if(a[i][j]){
+					m++;
+					edges[m] = {i,j};
+				}
+			}
+		}
 
-    vector<int> indeg(n+1, 0), outdeg(n+1, 0);
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            if (a[i][j]) {
-                outdeg[i]++;
-                indeg[j]++;
-            }
+		for(int e = 1;e <= m;e++){
+			int u = edges[e].first;
+			int v = edges[e].second;
+			b[v][e] = -1;
+			b[u][e] = 1;
+		}
 
-    if (t == 1) {
-        for (int i = 1; i <= n; i++)
-            cout << indeg[i] << " " << outdeg[i] << "\n";
-    } else {
-        
-        
-        vector<pair<int,int>> edges;
-        for (int u = 1; u <= n; u++)
-            for (int v = 1; v <= n; v++)
-                if (a[u][v])
-                    edges.push_back({u, v});
-        sort(edges.begin(), edges.end());
-        int m = edges.size();
-        cout << n << " " << m << "\n";
-        for (int i = 1; i <= n; i++) {
-            for (int e = 0; e < m; e++) {
-                int val = 0;
-                if (edges[e].first == i) val = 1;
-                else if (edges[e].second == i) val = -1;
-                if (e > 0) cout << " ";
-                cout << val;
-            }
-            cout << "\n";
-        }
-    }
-    return 0;
+		cout << n << " " << m << "\n";
+		for(int i = 1;i <= n;i++){
+			for(int j = 1;j <= m;j++){
+				cout << b[i][j] << " ";
+			}
+			cout << "\n";
+		}
+	}
+
+	return 0;
 }
