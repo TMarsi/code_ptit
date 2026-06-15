@@ -1,59 +1,52 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-const int INF = 10000;
+#define INF 10000
 
-int main() {
-    freopen("DN.INP", "r", stdin);
-    freopen("DN.OUT", "w", stdout);
+int n, s, t,c[101][101];
+int path[101],a[101];
+bool check[101];
 
-    int n, s, t;
-    cin >> n >> s >> t;
+int main(){
+	freopen("DN.INP","r",stdin);
+	freopen("DN.OUT","w",stdout);
+	cin >> n >> s >> t;
+	for(int i = 1;i <= n;i++){
+		for(int j = 1;j <= n;j++) cin >> c[i][j];
+	}
+	for(int i = 1;i <= n;i++){
+		a[i] = INF;
+		path[i] = -1;
+	}
+	a[s] = 0; 
 
-    vector<vector<int>> c(n+1, vector<int>(n+1, INF));
-    for (int i = 1; i <= n; i++) c[i][i] = 0;
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            cin >> c[i][j];
+	for(int i = 1;i < n;i++){
+		int u = -1;
+		for(int j = 1;j <= n;j++){
+			if(!check[j] && (u == -1 || a[j] < a[u] )) u = j;
 
-    
-    vector<int> dist(n+1, INF);
-    vector<int> parent(n+1, -1);
-    vector<bool> visited(n+1, false);
-    dist[s] = 0;
+		}
+		if(u == -1 || a[u] == INF) break;
 
-    for (int iter = 0; iter < n; iter++) {
-        int u = -1;
-        for (int i = 1; i <= n; i++)
-            if (!visited[i] && (u == -1 || dist[i] < dist[u]))
-                u = i;
-        if (u == -1 || dist[u] == INF) break;
-        visited[u] = true;
-        for (int v = 1; v <= n; v++) {
-            if (c[u][v] < INF && dist[u] + c[u][v] < dist[v]) {
-                dist[v] = dist[u] + c[u][v];
-                parent[v] = u;
-            }
-        }
-    }
-
-    if (dist[t] == INF) {
-        cout << 0 << "\n";
-    } else {
-        cout << dist[t] << "\n";
-        
-        vector<int> path;
-        int cur = t;
-        while (cur != -1) {
-            path.push_back(cur);
-            cur = parent[cur];
-        }
-        reverse(path.begin(), path.end());
-        for (int i = 0; i < (int)path.size(); i++) {
-            if (i > 0) cout << " ";
-            cout << path[i];
-        }
-        cout << "\n";
+		check[u] = true;
+		for(int j = 1;j <= n;j++){
+			if(!check[j]  && (a[u] + c[u][j] < a[j])){
+				a[j] = a[u] + c[u][j];
+				path[j] = u;
+			}
+		}
+	}
+	
+	if(a[t] == INF){
+		cout << 0 << "\n";
+	} else {
+        cout << a[t] << "\n";
+        vector<int> pat;
+        for (int x = t; x != -1; x = path[x]) pat.push_back(x);
+        reverse(pat.begin(), pat.end());
+        for (int i = 0; i < (int)pat.size(); i++)
+            cout << pat[i] << (i + 1 < (int)pat.size() ? " " : "\n");
     }
     return 0;
+
 }
