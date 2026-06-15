@@ -1,51 +1,53 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
-    freopen("DT.INP", "r", stdin);
-    freopen("DT.OUT", "w", stdout);
+int n,t,degIn[101],degOut[101],a[101][101],b[101][101];
+vector<int> adj[101];
 
-    int t, n;
-    cin >> t >> n;
+int main(){
+	freopen("DT.INP","r",stdin);
+	freopen("DT.OUT","w",stdout);
 
-    vector<vector<int>> a(n+1, vector<int>(n+1, 0));
-    vector<int> indeg(n+1, 0), outdeg(n+1, 0);
-
-    for (int i = 1; i <= n; i++) {
-        int k;
-        cin >> k;
-        for (int j = 0; j < k; j++) {
-            int v;
-            cin >> v;
-            a[i][v] = 1;
-            outdeg[i]++;
-            indeg[v]++;
-        }
-    }
-
-    if (t == 1) {
-        for (int i = 1; i <= n; i++)
-            cout << indeg[i] << " " << outdeg[i] << "\n";
-    } else {
-        
-        vector<pair<int,int>> edges;
-        for (int u = 1; u <= n; u++)
-            for (int v = 1; v <= n; v++)
-                if (a[u][v])
-                    edges.push_back({u, v});
-        sort(edges.begin(), edges.end());
-        int m = edges.size();
-        cout << n << " " << m << "\n";
-        for (int i = 1; i <= n; i++) {
-            for (int e = 0; e < m; e++) {
-                int val = 0;
-                if (edges[e].first == i) val = 1;
-                else if (edges[e].second == i) val = -1;
-                if (e > 0) cout << " ";
-                cout << val;
-            }
-            cout << "\n";
-        }
-    }
-    return 0;
+	cin >> t >> n;
+	for(int i = 1;i <= n;i++){
+		int k;cin >> k;
+		degOut[i] = k;
+		int v;
+		for(int j = 1;j <= k;j++){
+			cin >> v;
+			adj[i].push_back(v);
+			degIn[v]++;
+			a[i][v] = 1;
+		}
+	}
+	if(t == 1){
+		for(int i = 1;i <= n;i++){
+			cout << degIn[i] << " " << degOut[i] << "\n";
+		}
+	} else {
+		int m = 0;
+		for(int i = 1;i <= n;i++){
+			for(int j = 1;j <= n;j++){
+				if(a[i][j]) m++;
+			}
+		}
+		int e = 1;
+		for(int i = 1;i <= m;i++){
+			for(int j = 1;j <= m;j++){
+				if(a[i][j]){
+					b[i][e] = 1;
+					b[j][e] = -1;
+					e++;
+				}
+			}
+		}
+		cout << n << " " << m << "\n";
+		for(int i = 1;i <= n;i++){
+			for(int k = 1;k <= m;k++){
+				cout << b[i][k];
+				if(k < m) cout << " ";
+			}
+			cout << "\n";
+		}
+	}
 }
