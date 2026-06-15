@@ -1,72 +1,70 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int n;
-vector<vector<int>> a;
-vector<bool> visited;
-vector<pair<int, int>> tree_edges;
+int n,s,a[101][101];
+bool vs[101];
 
-void dfsRec(int u) {
-  visited[u] = true;
-  for (int v = 1; v <= n; v++) {
-    if (a[u][v] && !visited[v]) {
-      tree_edges.push_back({min(u, v), max(u, v)});
-      dfsRec(v);
-    }
-  }
+struct edges
+{
+	int u,v;
+};
+vector<edges> khung;
+void DFS(int x){
+	vs[x] = true;
+	for(int i = 1;i <= n;i++){
+		if(a[x][i] == 1 && !vs[i]) {
+			khung.push_back({min(x,i),max(x,i)});
+			DFS(i);
+		}
+	}
 }
 
-void bfs(int s) {
-  queue<int> q;
-  q.push(s);
-  visited[s] = true;
-  while (!q.empty()) {
-    int u = q.front();
-    q.pop();
-    for (int v = 1; v <= n; v++) {
-      if (a[u][v] && !visited[v]) {
-        visited[v] = true;
-        tree_edges.push_back({min(u, v), max(u, v)});
-        q.push(v);
-      }
-    }
-  }
+void BFS(int start){
+	queue<int> q;
+	vs[start] = true;
+	q.push(start);
+	while(!q.empty()){
+		int x = q.front();
+		q.pop();
+		for(int i = 1;i <= n;i++){
+			if(a[x][i] == 1 && !vs[i]){
+				vs[i] = true;
+				khung.push_back({min(x,i),max(x,i)});
+				q.push(i);
+			}
+		}
+	}
 }
 
-int main() {
-  freopen("CK.INP", "r", stdin);
-  freopen("CK.OUT", "w", stdout);
+int main(){
 
-  int t, s;
-  cin >> t >> n >> s;
+	freopen("CK.INP","r",stdin);
+	freopen("CK.OUT","w",stdout);
 
-  a.assign(n + 1, vector<int>(n + 1, 0));
-  for (int i = 1; i <= n; i++)
-    for (int j = 1; j <= n; j++)
-      cin >> a[i][j];
+	int t;cin >> t;
+	cin >> n >> s ;
+	for(int i = 1;i <= n ;i++){
+		for(int j = 1;j <= n;j++){
+			cin >> a[i][j];
+		}
+	}
 
-  visited.assign(n + 1, false);
+	for(int i = 1;i <= n;i++) vs[i] = false;
+	if(t == 1){
+		DFS(s);
 
-  if (t == 1)
-    dfsRec(s);
-  else
-    bfs(s);
+	} else BFS(s);
 
-  bool isSpanning = true;
-  for (int i = 1; i <= n; i++) {
-    if (!visited[i]) {
-      isSpanning = false;
-      break;
-    }
-  }
+	int count = 0;
+    for (int i = 1; i <= n; i++) if (vs[i]) count++;
 
-  if (!isSpanning) {
-    cout << 0 << "\n";
-  } else {
-    cout << (int)tree_edges.size() << "\n";
-    for (auto &e : tree_edges)
-      cout << e.first << " " << e.second << "\n";
-  }
-
-  return 0;
+	if(count == n && khung.size() == (n - 1)){
+		cout << n - 1 << "\n";
+		for (int e = 0;e < (int)khung.size();e++) {
+            cout << khung[e].u << " " << khung[e].v << "\n";
+        }
+	} else {
+		cout << 0 << "\n";
+	}
+	return 0;
 }
