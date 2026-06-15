@@ -1,45 +1,41 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
-    freopen("DT.INP", "r", stdin);
-    freopen("DT.OUT", "w", stdout);
+int n,m,a[101][101],deg[101],b[101][101];
+pair<int,int> edges[101];
 
-    int t, n, m;
-    cin >> t >> n >> m;
+int main(){
+	freopen("DT.INP","r",stdin);
+	freopen("DT.OUT","w",stdout);
 
-    vector<pair<int,int>> edges;
-    vector<int> deg(n+1, 0);
-
-    for (int i = 0; i < m; i++) {
-        int u, v;
-        cin >> u >> v;
-        if (u > v) swap(u, v);
-        edges.push_back({u, v});
-        deg[u]++;
-        deg[v]++;
-    }
-    
-    sort(edges.begin(), edges.end());
-
-    if (t == 1) {
-        for (int i = 1; i <= n; i++) {
-            if (i > 1) cout << " ";
-            cout << deg[i];
-        }
-        cout << "\n";
-    } else {
-        
-        cout << n << " " << m << "\n";
-        for (int i = 1; i <= n; i++) {
-            for (int e = 0; e < m; e++) {
-                int val = 0;
-                if (edges[e].first == i || edges[e].second == i) val = 1;
-                if (e > 0) cout << " ";
-                cout << val;
-            }
-            cout << "\n";
-        }
-    }
-    return 0;
+	int t;cin >> t;
+	cin >> n >> m;
+	for(int i = 1;i <= m;i++){
+		int u,v;cin >> u >> v;
+		deg[u]++;
+		deg[v]++;
+		a[u][v] = 1;
+		a[v][u] = 1;
+		edges[i] = {u,v};
+	}
+	if(t == 1){
+		for(int i = 1;i <= n;i++){
+			cout << deg[i] << " ";
+		}
+	} else{
+		for(int k = 1;k <= m;k++){
+			int u = edges[k].first;
+			int v = edges[k].second;
+			b[u][k] = 1;
+			b[v][k] = 1;
+		}
+		cout << n << " " << m << "\n";
+		for(int i = 1;i <= n;i++){
+			for(int k = 1;k <= m;k++){
+				cout << b[i][k] << " ";
+			}
+			cout << "\n";
+		}
+	}
+	return 0;
 }
