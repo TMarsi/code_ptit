@@ -1,43 +1,35 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
-    freopen("DT.INP", "r", stdin);
-    freopen("DT.OUT", "w", stdout);
+int n,m,a[101][101],deg[101];
 
-    int t, n, m;
-    cin >> t >> n >> m;
+int main(){
+	freopen("DT.INP","r",stdin);
+	freopen("DT.OUT","w",stdout);
 
-    vector<vector<int>> a(n+1, vector<int>(n+1, 0));
-    vector<int> deg(n+1, 0);
+	int t;cin >> t;
+	cin >> n >> m;
+	for(int i = 1;i <= m;i++){
+		int u,v;cin >> u >> v;
+		deg[u]++;
+		deg[v]++;
+		a[u][v] = 1;
+		a[v][u] = 1;
+	}
+	if(t == 1){
+		for(int i = 1;i <= n;i++){
+			cout << deg[i] << " ";
+		}
+	} else{
+		cout << n << "\n";
+		for(int i = 1;i <= n;i++){
+			cout << deg[i] << " ";
+			for(int j = 1;j <= n;j++){
+				if(a[i][j]) cout << j << " ";
+			}
+			cout << "\n";
+		}
+	}
 
-    for (int i = 0; i < m; i++) {
-        int u, v;
-        cin >> u >> v;
-        a[u][v] = 1;
-        a[v][u] = 1;
-        deg[u]++;
-        deg[v]++;
-    }
-
-    if (t == 1) {
-        for (int i = 1; i <= n; i++) {
-            if (i > 1) cout << " ";
-            cout << deg[i];
-        }
-        cout << "\n";
-    } else {
-        
-        cout << n << "\n";
-        for (int i = 1; i <= n; i++) {
-            vector<int> neighbors;
-            for (int j = 1; j <= n; j++)
-                if (a[i][j]) neighbors.push_back(j);
-            sort(neighbors.begin(), neighbors.end());
-            cout << neighbors.size();
-            for (int v : neighbors) cout << " " << v;
-            cout << "\n";
-        }
-    }
-    return 0;
+	return 0;
 }
