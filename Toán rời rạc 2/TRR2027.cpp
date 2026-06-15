@@ -1,55 +1,46 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int n;
-vector<vector<int>> a;
-vector<int> disc, low, par;
-vector<bool> visited;
-vector<pair<int,int>> bridges;
-int timer_cnt;
+int n,a[101][101];
+bool vs[101];
 
-void dfs(int u) {
-    visited[u] = true;
-    disc[u] = low[u] = timer_cnt++;
-    for (int v = 1; v <= n; v++) {
-        if (!a[u][v]) continue;
-        if (!visited[v]) {
-            par[v] = u;
-            dfs(v);
-            low[u] = min(low[u], low[v]);
-            if (low[v] > disc[u]) {
-                int x = min(u, v), y = max(u, v);
-                bridges.push_back({x, y});
-            }
-        } else if (v != par[u]) {
-            low[u] = min(low[u], disc[v]);
-        }
-    }
+void DFS(int x){
+	vs[x] = true;
+	for(int i = 1;i <= n;i++){
+		if(a[x][i] == 1 && !vs[i]){
+			DFS(i);
+		}
+	}
 }
 
-int main() {
-    freopen("TK.INP", "r", stdin);
-    freopen("TK.OUT", "w", stdout);
+int main(){
+	freopen("TK.INP","r",stdin);
+	freopen("TK.OUT","w",stdout);
 
-    cin >> n;
-    a.assign(n+1, vector<int>(n+1, 0));
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            cin >> a[i][j];
+	cin >> n;
+	for(int i = 1;i <= n;i++){
+		for(int j = 1;j <= n;j++) cin >> a[i][j];
+	}
+	
+	vector<pair<int,int>> luu;
 
-    disc.assign(n+1, 0);
-    low.assign(n+1, 0);
-    par.assign(n+1, -1);
-    visited.assign(n+1, false);
-    timer_cnt = 0;
+	for(int u = 1;u <= n;u++){
+		for(int v = u + 1;v <= n;v++){
+			if(a[u][v] == 1){
+				a[u][v] = 0;
+				a[v][u] = 0;
+				memset(vs,false,sizeof(vs));
+				DFS(u);
+				if(!vs[v]) luu.push_back({u,v});
+				a[u][v] = 1;
+				a[v][u] = 1;
+			}
+		}
+	}
 
-    for (int i = 1; i <= n; i++)
-        if (!visited[i])
-            dfs(i);
+	cout << luu.size() << "\n";
+	for(int i = 0;i < (int)luu.size();i++){
+		cout << luu[i].first << " " << luu[i].second << "\n";
+	}
 
-    sort(bridges.begin(), bridges.end());
-    cout << bridges.size() << "\n";
-    for (auto& [u, v] : bridges)
-        cout << u << " " << v << "\n";
-    return 0;
 }
