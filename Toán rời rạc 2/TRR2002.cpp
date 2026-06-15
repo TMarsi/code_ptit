@@ -1,63 +1,60 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
-    freopen("TK.INP", "r", stdin);
-    freopen("TK.OUT", "w", stdout);
+int n,u,v,a[1001][1001];
+bool vs[1001] ;
+vector<int> edges;
+int ok[1001];
 
-    int t, n, u, v;
-    cin >> t >> n >> u >> v;
+void BFS(int start){
+	queue<int> q;
+	q.push(start);
+	vs[start] = true;
+	ok[start] = -1;
 
-    vector<vector<int>> a(n+1, vector<int>(n+1, 0));
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            cin >> a[i][j];
+	while(!q.empty()){
+		int x = q.front();
+		q.pop();
+		if(x == v) return;
 
-    if (t == 1) {
-        
-        int count = 0;
-        for (int w = 1; w <= n; w++) {
-            if (w != u && w != v && a[u][w] && a[w][v])
-                count++;
-        }
-        cout << count << "\n";
-    } else {
-        
-        vector<int> parent(n+1, -1);
-        vector<bool> visited(n+1, false);
-        queue<int> q;
-        q.push(u);
-        visited[u] = true;
-        bool found = false;
+		for(int i = 1;i <= n;i++){
+			if(a[x][i] == 1 && !vs[i]){
+				vs[i] = true;
+				ok[i] = x;
+				q.push(i);
+			}
+		}
+	}
+}
 
-        while (!q.empty() && !found) {
-            int cur = q.front(); q.pop();
-            for (int w = 1; w <= n; w++) {
-                if (a[cur][w] && !visited[w]) {
-                    visited[w] = true;
-                    parent[w] = cur;
-                    if (w == v) { found = true; break; }
-                    q.push(w);
-                }
-            }
-        }
+int main(){
+	freopen("TK.INP","r",stdin);
+	freopen("TK.OUT","w",stdout);
 
-        if (!found) {
-            cout << 0 << "\n";
-        } else {
-            vector<int> path;
-            int cur = v;
-            while (cur != -1) {
-                path.push_back(cur);
-                cur = parent[cur];
-            }
-            reverse(path.begin(), path.end());
-            for (int i = 0; i < (int)path.size(); i++) {
-                if (i > 0) cout << " ";
-                cout << path[i];
-            }
-            cout << "\n";
-        }
-    }
-    return 0;
+	int t;cin >> t;
+	cin >> n >> u >> v;
+	for(int i = 1;i <= n;i++){
+		for(int j = 1;j <= n;j++){
+			cin >> a[i][j];
+		}
+	}
+	if(t == 1){
+		int count = 0;
+		for(int k = 1;k <= n;k++) {if (k != u && k!= v && a[u][k] && a[k][v])  count ++;}
+		cout << count;
+	} else {
+		BFS(u);
+		if(vs[v]){
+			for(int i = v;i != -1;i = ok[i]){
+				edges.push_back(i);
+			}
+			reverse(edges.begin(),edges.end());
+			for(int i = 0;i < (int)edges.size();i++){
+				cout << edges[i];
+				if(i != (int)edges.size() - 1) cout << " ";
+			}
+		} else {
+			cout << 0;
+		}
+	}
 }
