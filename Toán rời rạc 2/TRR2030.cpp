@@ -1,66 +1,50 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int n;
-vector<vector<int>> a;
+int n,a[101][101];
+bool vs[101];
 
-int countComponents(int skipU, int skipV) {
-  vector<bool> vis(n + 1, false);
-  int components = 0;
-
-  for (int start = 1; start <= n; start++) {
-    if (vis[start])
-      continue;
-    components++;
-
-    queue<int> q;
-    q.push(start);
-    vis[start] = true;
-    while (!q.empty()) {
-      int u = q.front();
-      q.pop();
-      for (int v = 1; v <= n; v++) {
-        if (!vis[v] && a[u][v]) {
-          if ((u == skipU && v == skipV) || (u == skipV && v == skipU))
-            continue;
-          vis[v] = true;
-          q.push(v);
-        }
-      }
-    }
-  }
-  return components;
+void BFS(int start){
+	queue<int> q;
+	q.push(start);
+	vs[start] = true;
+	while(!q.empty()){
+		int x = q.front();
+		q.pop();
+		for(int i = 1;i <= n;i++){
+			if(a[x][i] == 1 && !vs[i]){
+				q.push(i);
+				vs[i] = true;
+			}
+		}
+	}
 }
 
-int main() {
-  freopen("TK.INP", "r", stdin);
-  freopen("TK.OUT", "w", stdout);
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
+int main(){
+	freopen("TK.INP","r",stdin);
+	freopen("TK.OUT","w",stdout);
 
-  cin >> n;
-  a.assign(n + 1, vector<int>(n + 1, 0));
-  for (int i = 1; i <= n; i++)
-    for (int j = 1; j <= n; j++)
-      cin >> a[i][j];
-  int original = countComponents(-1, -1);
-
-  vector<pair<int, int>> bridges;
-  for (int u = 1; u <= n; u++) {
-    for (int v = u + 1; v <= n; v++) {
-      if (a[u][v]) {
-        if (countComponents(u, v) > original) {
-          bridges.push_back({u, v});
-        }
-      }
-    }
-  }
-
-  sort(bridges.begin(), bridges.end());
-
-  cout << bridges.size() << "\n";
-  for (auto &[u, v] : bridges)
-    cout << u << " " << v << "\n";
-
-  return 0;
+	cin >> n;
+	for(int i = 1;i <= n;i++){
+		for(int j = 1;j <= n;j++) cin >> a[i][j];
+	}
+	
+	vector<pair<int,int>> luu;
+	for(int u = 1;u <= n;u++){
+		for(int v = u + 1;v <= n;v++){
+			if(a[u][v] == 1){
+				a[u][v] = 0;
+				a[v][u] = 0;
+				memset(vs,false,sizeof(vs));
+				BFS(u);
+				if(!vs[v]) luu.push_back({u,v});
+				a[u][v] = 1;
+				a[v][u] = 1;
+			}
+		}
+	}
+	cout << luu.size() << "\n";
+	for(int i = 0;i < (int)luu.size();i++){
+		cout << luu[i].first << " " << luu[i].second <<  "\n";
+	}
 }
